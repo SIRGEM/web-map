@@ -1,11 +1,27 @@
 <script>
 	import { Map, TileLayer, Marker, Popup } from 'sveaflet';
+    import { onMount } from 'svelte';
 
-    let markers_position = [
-        [-31.44146561060643, -64.19316654865654],
-        [-31.43826082308847, -64.1933846882900],
-        [-31.43420345093465, -64.18607029718518],
-    ];
+    let markers_position = [];
+
+    onMount(() => {
+        console.log('Page loaded');
+        get_marker_position();
+    });
+
+    function get_marker_position() {
+        console.log('Getting markers position');
+        fetch('/api/get_markers')
+            .then(response => response.json())
+            .then(data => {
+                markers_position = data.markers;
+            });
+    }
+
+    // Call get_marker_position every 1 second
+    setInterval(get_marker_position, 5000);
+
+
 </script>
 
 <div style="width:100%;height:800px;">
