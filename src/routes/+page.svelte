@@ -22,7 +22,7 @@
                         if (data[key].position) {
                             let latitude = data[key].position.latitude;
                             let longitude = data[key].position.longitude;
-                            if (latitude && longitude)
+                            if (latitude != undefined && longitude != undefined)
                                 markers_position.push([latitude, longitude]);
                         }
                     } catch (error) {
