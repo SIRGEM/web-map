@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
 
     let markers_position = [];
+    let localized_nodes = [];
 
     onMount(() => {
         console.log('Page loaded');
@@ -16,14 +17,18 @@
             .then(data => {
                 // iterate over keys of data
                 markers_position = [];
+                localized_nodes = [];
                 for (const key in data) {
                     // Check if dict has "position"
                     try {
                         if (data[key].position) {
+                            console.log(data[key]);
                             let latitude = data[key].position.latitude;
                             let longitude = data[key].position.longitude;
-                            if (latitude != undefined && longitude != undefined)
+                            if (latitude != undefined && longitude != undefined){
                                 markers_position.push([latitude, longitude]);
+                                localized_nodes.push(data[key]);
+                            }
                         }
                     } catch (error) {
                         console.log('Error:', error);
@@ -46,13 +51,28 @@
 		}}
 	>
 		<TileLayer url={'https://tile.openstreetmap.org/{z}/{x}/{y}.png'} />
-        {#each markers_position as position}
-            <Marker latLng={position}>
+        {#each localized_nodes as nodes}
+            <Marker latLng={[nodes.position.latitude, nodes.position.longitude]}>
                 <Popup>
                     <div>
-                        <h1>Marker</h1>
-                        <p>Lat: {position[0]}</p>
-                        <p>Lng: {position[1]}</p>
+                        <h2>{nodes.user.longName}</h2>
+                        <div>
+                            <h3>user:</h3>
+                            <ul>
+                                <li>id: {nodes.id}</li>
+                                <li>latitude: {nodes.position.latitude}</li>
+                                <li>longitude: {nodes.position.longitude}</li>
+                                <li>short name: {nodes.user.shortName}</li>
+                            </ul>
+                            <h3>Metrics:</h3>
+                            <ul>
+                                <li>airUtilTx {nodes.deviceMetrics.airUtilTx}</li>
+                                <li> batteryLevel {nodes.deviceMetrics.batteryLevel}</li>
+                                <li> channelUtilization {nodes.deviceMetrics.channelUtilization}</li>
+                                <li> uptimeSeconds {nodes.deviceMetrics.uptimeSeconds}</li>
+                                <li> voltage {nodes.deviceMetrics.voltage}</li>
+                            </ul>
+                        </div>
                     </div>
                 </Popup>
             </Marker>
