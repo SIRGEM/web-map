@@ -11,10 +11,24 @@
 
     function get_marker_position() {
         console.log('Getting markers position');
-        fetch('/api/get_markers')
+        fetch('http://0.0.0.0:8000/nodes')
             .then(response => response.json())
             .then(data => {
-                markers_position = data.markers;
+                // iterate over keys of data
+                markers_position = [];
+                for (const key in data) {
+                    // Check if dict has "position"
+                    try {
+                        if (data[key].position) {
+                            let latitude = data[key].position.latitude;
+                            let longitude = data[key].position.longitude;
+                            if (latitude && longitude)
+                                markers_position.push([latitude, longitude]);
+                        }
+                    } catch (error) {
+                        console.log('Error:', error);
+                    }
+                }
             });
     }
 
