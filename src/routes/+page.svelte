@@ -22,7 +22,6 @@
                     // Check if dict has "position"
                     try {
                         if (data[key].position) {
-                            console.log(data[key]);
                             let latitude = data[key].position.latitude;
                             let longitude = data[key].position.longitude;
                             if (latitude != undefined && longitude != undefined){
